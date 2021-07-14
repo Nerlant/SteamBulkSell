@@ -1,6 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.common.exceptions import TimeoutException
 from getpass import getpass
 import time
 
@@ -10,13 +13,13 @@ password = getpass()
 driver = webdriver.Firefox()
 driver.get("https://steamcommunity.com/login")
 
-username_field = driver.find_element_by_id("steamAccountName")
-password_field = driver.find_element_by_id("steamPassword")
+username_field = driver.find_element_by_id("input_username")
+password_field = driver.find_element_by_id("input_password")
 
 username_field.send_keys(username)
 password_field.send_keys(password)
 
-sign_in_field = driver.find_element_by_id("SteamLogin")
+sign_in_field = driver.find_elements_by_class_name("login_btn")[0]
 sign_in_field.click()
 
 WebDriverWait(driver, 360).until(
@@ -75,14 +78,13 @@ while True:
             price_text.send_keys(price)
             sell_accept = driver.find_element_by_id("market_sell_dialog_accept")
             sell_accept.click()
-            sell_ok = driver.find_element_by_id("market_sell_dialog_ok")
-            sell_ok.click()
-            time.sleep(5)
 
-            # Click OK button on "Additional Confirmation Needed"
-            for btn in driver.find_elements_by_xpath("//span[text()='OK']"):
-                if btn.size["width"] != 0 and btn.size["height"] != 0:
-                    btn.click()
+            WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.ID, "market_sell_dialog_ok"))).click()
+
+            try:
+                WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, "//span[text()='OK']"))).click()
+            except TimeoutException:
+                print('No additional confirmation needed.')
 
             items_sold += 1
 
