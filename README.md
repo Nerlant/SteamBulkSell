@@ -1,4 +1,4 @@
-# mabusell
+# Steam Bulk Sell
 An easy Steam market bulk sell script written in Python 3.
 
 ## Short Usage Instructions
@@ -11,17 +11,16 @@ Just download the driver and place it in the root directory of the repository.
 * git installed
   * For Windows users: [git-scm](https://git-scm.com/download/win)
   * For Linux users: please consult the package manager of you distro
-* Python 3 installed
+* Python 3.11 installed
   * For Windows users: [python.org](https://www.python.org/downloads/)
   * For Linux users: please consult the package manager of you distro
 * Pipenv installed
   * Install Pipenv following [this](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv) instructions
-* Having a custom steam URL (steamcommunity.com/id/*your-custom-id*)
 
 1. Clone this repository:
 * open a bash (or git bash for Windows users) 
-* navigate to the folder where you want to install mabusell
-* Paste and execute: `git clone https://github.com/Nerlant/mabusell.git`
+* navigate to the folder where you want to install SteamBulkSell
+* Paste and execute: `git clone https://github.com/Nerlant/SteamBulkSell.git`
 
 2. Download geckodriver
 * Download the geckodriver from [here](https://github.com/mozilla/geckodriver/releases)
@@ -29,7 +28,7 @@ Just download the driver and place it in the root directory of the repository.
 
 3. Install dependencies
 * open a bash (or git bash for Windows users) 
-* navigate to the folder where you want to installed mabusell (cloned the repository)
+* navigate to the folder where you want to install SteamBulkSell (cloned the repository)
 * execute `pipenv install --ignore-pipfile`
 
 4. Run script
