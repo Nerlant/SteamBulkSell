@@ -11,19 +11,29 @@ username = input("Enter username: ")
 password = getpass()
 
 driver = webdriver.Firefox()
-driver.get("https://steamcommunity.com/login")
+driver.get("https://steamcommunity.com/login/home/?goto=login")
 
-username_field = driver.find_element_by_id("input_username")
-password_field = driver.find_element_by_id("input_password")
+# Wait for website to properly load dynamic content
+WebDriverWait(driver, 360).until(
+    expected_conditions.presence_of_element_located((By.XPATH, "//form[contains(@class, 'LoginForm')]"))
+)
+
+username_field = driver.find_element(By.XPATH, "//input[@type='text']")
+password_field = driver.find_element(By.XPATH, "//input[@type='password']")
 
 username_field.send_keys(username)
 password_field.send_keys(password)
 
-sign_in_field = driver.find_elements_by_class_name("login_btn")[0]
+# Un-tick "remember me" field for good measure
+remember_me = driver.find_element(By.XPATH, "//div[contains(@tabindex, 0)]")
+remember_me.click()
+
+sign_in_field = driver.find_element(By.XPATH, "//button[@type='submit']")
 sign_in_field.click()
 
 WebDriverWait(driver, 360).until(
-    expected_conditions.url_contains("https://steamcommunity.com/id/")
+    expected_conditions.url_contains("https://steamcommunity.com/id/" or
+    expected_conditions.url_contains("https://steamcommunity.com/profile/"))
 )
 
 inventory_url = driver.current_url + "/inventory/"
@@ -49,14 +59,14 @@ items_sold = 0
 while True:
     current_page = driver.execute_script("return g_ActiveInventory.m_iCurrentPage")
 
-    active_inventory_page = driver.find_element_by_id("active_inventory_page")
+    active_inventory_page = driver.find_element(By.ID, "active_inventory_page")
     ctn = list(filter(lambda x: x.value_of_css_property("display") != "none",
-                      active_inventory_page.find_elements_by_class_name("inventory_ctn")))[0]
+                      active_inventory_page.find_elements(By.CLASS_NAME, "inventory_ctn")))[0]
 
-    inventory_pages = ctn.find_elements_by_class_name("inventory_page")
+    inventory_pages = ctn.find_elements(By.CLASS_NAME, "inventory_page")
 
     current_inventory_page = list(filter(lambda x: x.value_of_css_property("display") == "block", inventory_pages))[0]
-    item_holders = current_inventory_page.find_elements_by_class_name("itemHolder")
+    item_holders = current_inventory_page.find_elements(By.CLASS_NAME, "itemHolder")
 
     continue_on_same_page = False
 
@@ -71,18 +81,19 @@ while True:
             sell_item = i
             print("found item on page")
             driver.execute_script("SellCurrentSelection()")
-            subscriber_agreement_checkbox = driver.find_element_by_id("market_sell_dialog_accept_ssa")
+            subscriber_agreement_checkbox = driver.find_element(By.ID, "market_sell_dialog_accept_ssa")
             if not subscriber_agreement_checkbox.is_selected():
                 subscriber_agreement_checkbox.click()
-            price_text = driver.find_element_by_id("market_sell_currency_input")
+            price_text = driver.find_element(By.ID, "market_sell_currency_input")
             price_text.send_keys(price)
-            sell_accept = driver.find_element_by_id("market_sell_dialog_accept")
+            sell_accept = driver.find_element(By.ID, "market_sell_dialog_accept")
             sell_accept.click()
 
             WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.ID, "market_sell_dialog_ok"))).click()
 
             try:
-                WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.XPATH, "//span[text()='OK']"))).click()
+                WebDriverWait(driver, 5).until(ec.element_to_be_clickable(
+                    (By.XPATH, "//span[text()='OK']"))).click()
             except TimeoutException:
                 print('No additional confirmation needed.')
 
@@ -94,7 +105,7 @@ while True:
                 exit(0)
 
             # sell succeeded
-            if driver.find_element_by_id("market_headertip_itemsold").value_of_css_property("display") != "none":
+            if driver.find_element(By.ID, "market_headertip_itemsold").value_of_css_property("display") != "none":
                 continue_on_same_page = True
                 break
 
