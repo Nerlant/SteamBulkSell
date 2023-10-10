@@ -7,6 +7,7 @@ from selenium.common.exceptions import TimeoutException
 from getpass import getpass
 import time
 
+
 username = input("Enter username: ")
 password = getpass()
 
