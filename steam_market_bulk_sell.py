@@ -94,7 +94,7 @@ while True:
 
             try:
                 WebDriverWait(driver, 5).until(ec.element_to_be_clickable(
-                    (By.XPATH, "//span[text()='OK']"))).click()
+                    (By.XPATH, "//div[@class='btn_grey_steamui btn_medium']/span[text()='OK']"))).click()
             except TimeoutException:
                 print('No additional confirmation needed.')
 

@@ -15,7 +15,7 @@ Just download the driver and place it in the root directory of the repository.
   * For Windows users: [python.org](https://www.python.org/downloads/)
   * For Linux users: please consult the package manager of you distro
 * Pipenv installed
-  * Install Pipenv following [this](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv) instructions
+  * Install Pipenv following [this](https://pipenv.pypa.io/en/latest/installation.html) instructions
 
 1. Clone this repository:
 * open a bash (or git bash for Windows users) 
